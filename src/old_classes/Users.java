@@ -9,6 +9,7 @@ public class Users {
 	// Attributes
 	private String username, password, name, 
 	surname, telephone;
+	@SuppressWarnings("unused")
 	private static int usersCounter = 0;
 	
 	// Methods 
