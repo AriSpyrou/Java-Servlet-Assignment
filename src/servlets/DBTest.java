@@ -1,6 +1,8 @@
 package servlets;
 import javax.naming.*;
 import javax.sql.*;
+
+import java.io.PrintWriter;
 import java.sql.*;
 public class DBTest {
 	String foo = "Not Connected";
@@ -40,7 +42,6 @@ public class DBTest {
         catch(Exception e) 
         {
             e.printStackTrace();
-            System.out.println("You dun goofed");
         }
     }
 
