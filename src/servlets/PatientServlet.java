@@ -58,6 +58,22 @@ public class PatientServlet extends HttpServlet {
                     {
                     	RequestDispatcher view = request.getRequestDispatcher("html/main.html");
                 		view.forward(request, response);
+                		/* 2o Erotima thelei ligo tropopoihsh vasiki leitourgia douleuei
+                		Statement stmt_ = conn.createStatement();
+                        ResultSet rst_ = stmt_.executeQuery("SELECT patientAMKA,name,surname,gender FROM public.patient WHERE userid='"+username+"';");
+                        out.println("<table BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>"
+                                +"<tr><th>Patient AMKA</th><th>Name</th></tr><th>Surname</th></tr><th>Gender</th></tr>");
+ 
+                        while(rst_.next()){
+                            try { if (rst != null) rst.close(); } catch (Exception e) {};
+                            try { if (stmt != null) stmt.close(); } catch (Exception e) {};
+                            out.println("<tr><td><center>"+rst_.getString("patientamka")+"</center></td>"
+                                 + "<td><center>"+rst_.getString("name")+"</center></td></tr>"
+                                 + "<td><center>"+rst_.getString("surname")+"</center></td></tr>"
+                                 + "<td><center>"+rst_.getString("gender")+"</center></td></tr>");
+                        }
+                        out.println("</table>"); 
+                		*/
                     }
                     else
                     {
