@@ -22,18 +22,18 @@ import javax.sql.DataSource;
 @WebServlet("/PatientServlet")
 public class PatientServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	String username, password, patientAMKA;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
     public PatientServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
     
     void login(HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
-    	String username = request.getParameter("uname");
-		String password = request.getParameter("pass");
+    	username = request.getParameter("uname");
+		password = request.getParameter("pass");
 		try
         {
             Context ctx = new InitialContext();
@@ -45,28 +45,15 @@ public class PatientServlet extends HttpServlet {
                 {
                     Statement stmt = conn.createStatement();
                     ResultSet rst = stmt.executeQuery("SELECT * FROM public.patient WHERE userid='"+username+"' AND password='"+password+"';");
-                    // cgeorge5x@newyorker.com
-                    // TxOu7F
+                    /*
+                     	cgeorge5x@newyorker.com
+                     	TxOu7F
+                    */
                     if(rst.next())
                     {
+                    	patientAMKA = rst.getString("patientAMKA");
                     	RequestDispatcher view = request.getRequestDispatcher("html/main.html");
                 		view.forward(request, response);
-                		/* 2o Erotima thelei ligo tropopoihsh vasiki leitourgia douleuei
-                		Statement stmt_ = conn.createStatement();
-                        ResultSet rst_ = stmt_.executeQuery("SELECT patientAMKA,name,surname,gender FROM public.patient WHERE userid='"+username+"';");
-                        out.println("<table BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>"
-                                +"<tr><th>Patient AMKA</th><th>Name</th></tr><th>Surname</th></tr><th>Gender</th></tr>");
- 
-                        while(rst_.next()){
-                            try { if (rst != null) rst.close(); } catch (Exception e) {};
-                            try { if (stmt != null) stmt.close(); } catch (Exception e) {};
-                            out.println("<tr><td><center>"+rst_.getString("patientamka")+"</center></td>"
-                                 + "<td><center>"+rst_.getString("name")+"</center></td></tr>"
-                                 + "<td><center>"+rst_.getString("surname")+"</center></td></tr>"
-                                 + "<td><center>"+rst_.getString("gender")+"</center></td></tr>");
-                        }
-                        out.println("</table>"); 
-                		*/
                     }
                     else
                     {
@@ -77,6 +64,71 @@ public class PatientServlet extends HttpServlet {
             }
         }
         catch(Exception e) 
+        {
+            e.printStackTrace();
+        }
+    }
+    
+    void show_patientDetails(HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
+    	try
+        {
+            Context ctx = new InitialContext();
+            DataSource ds = (DataSource)ctx.lookup("java:comp/env/jdbc/postgres");
+            if (ds != null) 
+            {
+                Connection conn = ds.getConnection();
+                if(conn != null) 
+                {
+                    Statement stmt = conn.createStatement();
+                    ResultSet rst = stmt.executeQuery("SELECT patientAMKA,name,surname,gender FROM public.patient WHERE userid='"+username+"';");
+                    out.println(""
+                    		+ "<table BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>"
+                            +"<tr><th>Patient AMKA</th><th>Name</th><th>Surname</th><th>Gender</th></tr>"
+                            + "");
+                    while(rst.next()){
+                        out.println("<tr><td><center>"+rst.getString("patientamka")+"</center></td>"
+                             + "<td><center>"+rst.getString("name")+"</center></td>"
+                             + "<td><center>"+rst.getString("surname")+"</center></td>"
+                             + "<td><center>"+rst.getString("gender")+"</center></td></tr>");
+                    }
+                    out.println("</table>");
+                    conn.close();
+                }
+            }
+        }
+        catch(Exception e) 
+        {
+            e.printStackTrace();
+        }
+    }
+    
+    void show_appointment_history(HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
+    	try
+        {
+            Context ctx = new InitialContext();
+            DataSource ds = (DataSource)ctx.lookup("java:comp/env/jdbc/postgres");
+            if (ds != null) 
+            {
+                Connection conn = ds.getConnection();
+                if(conn != null) 
+                {
+                    Statement stmt = conn.createStatement();
+                    ResultSet rst = stmt.executeQuery("SELECT * FROM public.appointments WHERE \"patientAMKA\"='"+patientAMKA+"';");
+                    out.println(""
+                    		+ "<table BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>"
+                            +"<tr><th>Date</th><th>Doctor AMKA</th><th>Diagnosis</th></tr>"
+                            + "");
+                    while(rst.next()){
+                        out.println("<tr><td><center>"+rst.getString("t")+"</center></td>"
+                             + "<td><center>"+rst.getString("doctorAMKA")+"</center></td>"
+                             + "<td><center>"+rst.getString("diagnosis")+"</center></td></tr>");
+                    }
+                    out.println("</table>");
+                    conn.close();
+                }
+            }
+        }
+    	catch(Exception e) 
         {
             e.printStackTrace();
         }
@@ -92,54 +144,14 @@ public class PatientServlet extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
-		//login(request, response, out);
-		String username = request.getParameter("uname");
-		String password = request.getParameter("pass");
-		try
-        {
-            Context ctx = new InitialContext();
-            DataSource ds = (DataSource)ctx.lookup("java:comp/env/jdbc/postgres");
-            if (ds != null) 
-            {
-                Connection conn = ds.getConnection();
-                if(conn != null) 
-                {
-                    Statement stmt = conn.createStatement();
-                    ResultSet rst = stmt.executeQuery("SELECT * FROM public.patient WHERE userid='"+username+"' AND password='"+password+"';");
-                    // cgeorge5x@newyorker.com
-                    // TxOu7F
-                    if(rst.next())
-                    {
-                    	RequestDispatcher view = request.getRequestDispatcher("html/main.html");
-                		view.forward(request, response);
-                		/* 2o Erotima thelei ligo tropopoihsh vasiki leitourgia douleuei
-                		Statement stmt_ = conn.createStatement();
-                        ResultSet rst_ = stmt_.executeQuery("SELECT patientAMKA,name,surname,gender FROM public.patient WHERE userid='"+username+"';");
-                        out.println("<table BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>"
-                                +"<tr><th>Patient AMKA</th><th>Name</th></tr><th>Surname</th></tr><th>Gender</th></tr>");
- 
-                        while(rst_.next()){
-                            try { if (rst != null) rst.close(); } catch (Exception e) {};
-                            try { if (stmt != null) stmt.close(); } catch (Exception e) {};
-                            out.println("<tr><td><center>"+rst_.getString("patientamka")+"</center></td>"
-                                 + "<td><center>"+rst_.getString("name")+"</center></td></tr>"
-                                 + "<td><center>"+rst_.getString("surname")+"</center></td></tr>"
-                                 + "<td><center>"+rst_.getString("gender")+"</center></td></tr>");
-                        }
-                        out.println("</table>"); */
-                		
-                    }
-                    else
-                    {
-                    	out.append("Wrong username-password combination");
-                    }
-                    conn.close();
-                }
-            }
-        }
-        catch(Exception e) 
-        {
-            e.printStackTrace();
-        }
+		if (request.getParameter("login") != null) {
+			login(request, response, out);
+		}
+		else if (request.getParameter("show_patientDetails") != null) {
+			show_patientDetails(request, response , out);
+		}
+		else if (request.getParameter("show_appointment_history") != null) {
+			show_appointment_history(request, response , out);
+		}
 	}
 }
