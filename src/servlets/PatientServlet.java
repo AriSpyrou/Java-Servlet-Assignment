@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
+import old_classes.PasswordStoring;
+
 /**
  * Servlet implementation class PatientServlet
  */
@@ -33,7 +35,6 @@ public class PatientServlet extends HttpServlet {
     
     void login(HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
     	username = request.getParameter("uname");
-		password = request.getParameter("pass");
 		try
         {
             Context ctx = new InitialContext();
@@ -44,12 +45,13 @@ public class PatientServlet extends HttpServlet {
                 if(conn != null) 
                 {
                     Statement stmt = conn.createStatement();
-                    ResultSet rst = stmt.executeQuery("SELECT * FROM public.patient WHERE userid='"+username+"' AND password='"+password+"';");
+                    ResultSet rst = stmt.executeQuery("SELECT * FROM public.patient WHERE userid='"+username+"';");
+                    // TODO: DOUBLE JOIN
                     /*
                      	cgeorge5x@newyorker.com
                      	TxOu7F
                     */
-                    if(rst.next())
+                    if(rst.next() && PasswordStoring.verifyPassword(request.getParameter("pass"), rst.getString("password")))
                     {
                     	patientAMKA = rst.getString("patientAMKA");
                     	RequestDispatcher view = request.getRequestDispatcher("html/main.html");
