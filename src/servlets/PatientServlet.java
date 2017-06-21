@@ -16,8 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
-import old_classes.PasswordStoring;
-
 /**
  * Servlet implementation class PatientServlet
  */
@@ -31,44 +29,6 @@ public class PatientServlet extends HttpServlet {
      */
     public PatientServlet() {
         super();
-    }
-    
-    void login(HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
-    	username = request.getParameter("uname");
-		try
-        {
-            Context ctx = new InitialContext();
-            DataSource ds = (DataSource)ctx.lookup("java:comp/env/jdbc/postgres");
-            if (ds != null) 
-            {
-                Connection conn = ds.getConnection();
-                if(conn != null) 
-                {
-                    Statement stmt = conn.createStatement();
-                    ResultSet rst = stmt.executeQuery("SELECT * FROM public.patient WHERE userid='"+username+"';");
-                    // TODO: DOUBLE JOIN
-                    /*
-                     	cgeorge5x@newyorker.com
-                     	TxOu7F
-                    */
-                    if(rst.next() && PasswordStoring.verifyPassword(request.getParameter("pass"), rst.getString("password")))
-                    {
-                    	patientAMKA = rst.getString("patientAMKA");
-                    	RequestDispatcher view = request.getRequestDispatcher("html/main.html");
-                		view.forward(request, response);
-                    }
-                    else
-                    {
-                    	out.append("Wrong username-password combination");
-                    }
-                    conn.close();
-                }
-            }
-        }
-        catch(Exception e) 
-        {
-            e.printStackTrace();
-        }
     }
     
     void show_patientDetails(HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
@@ -140,16 +100,15 @@ public class PatientServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher view = request.getRequestDispatcher("html/login.html");
+		RequestDispatcher view = request.getRequestDispatcher("html/index.html");
 		view.forward(request, response);
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
-		if (request.getParameter("login") != null) {
-			login(request, response, out);
-		}
-		else if (request.getParameter("show_patientDetails") != null) {
+		username = loginServlet.username;
+		patientAMKA = loginServlet.AMKA;
+		if (request.getParameter("show_patientDetails") != null) {
 			show_patientDetails(request, response , out);
 		}
 		else if (request.getParameter("show_appointment_history") != null) {
