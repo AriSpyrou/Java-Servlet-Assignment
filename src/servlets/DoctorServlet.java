@@ -1,6 +1,9 @@
 package servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,22 +22,17 @@ public class DoctorServlet extends HttpServlet {
      */
     public DoctorServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-	}
+		PrintWriter out = response.getWriter();
+		if (request.getParameter("availability_statement") != null) {
+			RequestDispatcher view = request.getRequestDispatcher("html/form_availability.html");
+			view.forward(request, response);
+		}
+	}// pairnei mhna spaei se 4 pairnei meres me ena while ta kovei se misawra
 
 }

@@ -3,7 +3,6 @@ package servlets;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.Statement;
 
 import javax.naming.Context;
@@ -44,17 +43,14 @@ public class AdminServlet extends HttpServlet {
                 if(conn != null) 
                 {
                     Statement stmt = conn.createStatement();
-                    ResultSet rst = stmt.executeQuery("SELECT * FROM public.appointments WHERE \"patientAMKA\"='"+patientAMKA+"';");
-                    out.println(""
-                    		+ "<table BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>"
-                            +"<tr><th>Date</th><th>Doctor AMKA</th><th>Diagnosis</th></tr>"
-                            + "");
-                    while(rst.next()){
-                        out.println("<tr><td><center>"+rst.getString("t")+"</center></td>"
-                             + "<td><center>"+rst.getString("doctorAMKA")+"</center></td>"
-                             + "<td><center>"+rst.getString("diagnosis")+"</center></td></tr>");
+                    if(stmt.executeUpdate("INSERT INTO public.patient VALUES("+request.getParameter("amka")+",'"+request.getParameter("uname")+"','"+PasswordStoring.createHash(request.getParameter("pass"))+"','"+request.getParameter("fname")+"','"+request.getParameter("sname")+"','"+request.getParameter("gender")+"')")==0)
+                    {
+                    	out.println("Insert failed");
                     }
-                    out.println("</table>");
+                    else
+                    {
+                    	out.println("Successfully inserted");
+                    }
                     conn.close();
                 }
             }
@@ -65,24 +61,72 @@ public class AdminServlet extends HttpServlet {
         }
     }
     
-    void remove_patient(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
+    void remove_user(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
     {
+    	try
+        {
+            Context ctx = new InitialContext();
+            DataSource ds = (DataSource)ctx.lookup("java:comp/env/jdbc/postgres");
+            if (ds != null) 
+            {
+                Connection conn = ds.getConnection();
+                if(conn != null) 
+                {
+                    Statement stmt = conn.createStatement();
+                    if(stmt.executeUpdate("DELETE FROM public.patient WHERE patientAMKA='"+request.getParameter("amka")+"';")==0)
+                    {
+                    	if(stmt.executeUpdate("DELETE FROM public.doctor WHERE doctorAMKA='"+request.getParameter("amka")+"';")==0)
+                    	{
+                    		out.println("Invalid AMKA");
+                    	}
+                    	else
+                    	{
+                    		out.println("Successfully removed");
+                    	}
+                    }
+                    else
+                    {
+                    	out.println("Successfully removed");
+                    }
+                    conn.close();
+                }
+            }
+        }
+    	catch(Exception e) 
+        {
+            e.printStackTrace();
+        }
     }
     
     void add_doctor(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
     {
+    	try
+        {
+            Context ctx = new InitialContext();
+            DataSource ds = (DataSource)ctx.lookup("java:comp/env/jdbc/postgres");
+            if (ds != null) 
+            {
+                Connection conn = ds.getConnection();
+                if(conn != null) 
+                {
+                    Statement stmt = conn.createStatement();
+                    if(stmt.executeUpdate("INSERT INTO public.doctor VALUES("+request.getParameter("amka")+",'"+request.getParameter("uname")+"','"+PasswordStoring.createHash(request.getParameter("pass"))+"','"+request.getParameter("fname")+"','"+request.getParameter("sname")+"',"+request.getParameter("specialty")+")")==0)
+                    {
+                    	out.println("Insert failed");
+                    }
+                    else
+                    {
+                    	out.println("Successfully inserted");
+                    }
+                    conn.close();
+                }
+            }
+        }
+    	catch(Exception e) 
+        {
+            e.printStackTrace();
+        }
     }
-    
-    void remove_doctor(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
-    {
-    }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -104,6 +148,15 @@ public class AdminServlet extends HttpServlet {
 		else if (request.getParameter("remove_doctor") != null) {
 			RequestDispatcher view = request.getRequestDispatcher("html/form_remove.html");
 			view.forward(request, response);
+		}
+		else if (request.getParameter("form_remove") != null) {
+			remove_user(request, response , out);
+		}
+		else if (request.getParameter("form_add_user") != null) {
+			add_patient(request, response, out);
+		}
+		else if (request.getParameter("form_add_doctor") != null) {
+			add_doctor(request, response, out);
 		}
 	}
 
