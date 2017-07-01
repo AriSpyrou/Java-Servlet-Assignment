@@ -32,7 +32,6 @@ public class loginServlet extends HttpServlet {
      */
     public loginServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
     void login_function(HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
     	username = request.getParameter("uname");
