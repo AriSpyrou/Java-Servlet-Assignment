@@ -18,8 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
-import old_classes.PasswordStoring;
-
 /**
  * Servlet implementation class DoctorServlet
  */
@@ -187,7 +185,7 @@ public class DoctorServlet extends HttpServlet {
                 if(conn != null) 
                 {
                     Statement stmt = conn.createStatement();
-                    if(stmt.executeUpdate("DELETE FROM public.appointments WHERE id="+request.getParameter("id")+" AND t > NOW()+INTERVAL '2 DAY'")==0)
+                    if(stmt.executeUpdate("DELETE FROM public.appointments WHERE id="+request.getParameter("id")+" AND t > NOW()+INTERVAL '2 DAY' AND \"doctorAMKA\"='"+loginServlet.AMKA+"'")==0)
                     {
                     	out.println("Wrong ID or appointment is closer than 3 days");
                     }

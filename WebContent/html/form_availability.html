@@ -14,17 +14,17 @@
   <body>
     <form id='form' method='post' action='DoctorServlet'>
     	Pick Date Ranges<br>
-    	<input type="text" name="a1">-
-    	<input type="text" name="a2"><br>
-    	<input type="text" name="b1">-
-    	<input type="text" name="b2"><br>
-    	<input type="text" name="c1">-
-    	<input type="text" name="c2"><br>
-    	<input type="text" name="d1">-
-    	<input type="text" name="d2"><br><br>
+    	<input type="number" name="a1" min=1 max=8>-
+    	<input type="number" name="a2" min=1 max=8><br>
+    	<input type="number" name="b1" min=9 max=15>-
+    	<input type="number" name="b2" min=9 max=15><br>
+    	<input type="number" name="c1" min=16 max=22>-
+    	<input type="number" name="c2" min=16 max=22><br>
+    	<input type="number" name="d1" min=23 max=31>-
+    	<input type="number" name="d2" min=23 max=31><br><br>
       <input type='submit' name='availability_set' value='Submit'>
     </form>
-    <!--<script>
+    <!---<script>
     	function check(){
     		if(document.getElementsByName("a1")[0].value>document.getElementsByName("a2")[0].value || document.getElementsByName("b1")[0].value<document.getElementsByName("b2")[0].value || document.getElementsByName("c1")[0].value<document.getElementsByName("c2")[0].value || document.getElementsByName("d1")[0].value<document.getElementsByName("d2")[0].value) {
     			alert("Invalid Date Ranges");

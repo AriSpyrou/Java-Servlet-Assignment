@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<title>Book Appointment</title>
+    <style>
+      form {
+        text-align: center;
+        vertical-align: middle;
+        padding-top: 15%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <form id='form' method='post' action='PatientServlet'>
+      AMKA<br>
+      <input type='text' name='amka'><br><br>
+      Date<br>
+      <input type='text' name='date' placeholder='YYYY-MM-DD'><br><br>
+      Time<br>
+      <input type='text' name='time' placeholder='HH:MM:00'><br><br>
+      <input type='submit' name='form_book_appointment' value='Submit'>
+    </form>
+  </body>
+</html>
