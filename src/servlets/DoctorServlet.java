@@ -205,20 +205,25 @@ public class DoctorServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
 		if (request.getParameter("availability_statement") != null) {
+			loginServlet.validateCookie(request, response);
 			RequestDispatcher view = request.getRequestDispatcher("html/form_availability.html");
 			view.forward(request, response);
 		}
 		else if(request.getParameter("availability_set") != null){
+			loginServlet.validateCookie(request, response);
 			availability_set(request, response, out);
 		}
 		else if(request.getParameter("show_appointment_history") != null) {
+			loginServlet.validateCookie(request, response);
 			show_appointment_history(request, response , out);
 		}
 		else if(request.getParameter("cancel_appointment") != null) {
+			loginServlet.validateCookie(request, response);
 			RequestDispatcher view = request.getRequestDispatcher("html/form_cancel_appointment.html");
 			view.forward(request, response);
 		}
 		else if(request.getParameter("form_cancel_appointment") != null) {
+			loginServlet.validateCookie(request, response);
 			cancel_appointment(request, response, out);
 		}
 	}

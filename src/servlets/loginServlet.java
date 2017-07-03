@@ -11,6 +11,7 @@ import javax.naming.InitialContext;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,8 +25,7 @@ import old_classes.PasswordStoring;
 @WebServlet("/loginServlet")
 public class loginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	String password;
-	static String AMKA, username; 
+	static String AMKA; 
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -34,7 +34,7 @@ public class loginServlet extends HttpServlet {
         super();
     }
     void login_function(HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
-    	username = request.getParameter("uname");
+    	String username = request.getParameter("uname");
 		try
         {
             Context ctx = new InitialContext();
@@ -49,6 +49,9 @@ public class loginServlet extends HttpServlet {
                     if(rst.next() && PasswordStoring.verifyPassword(request.getParameter("pass"), rst.getString("password")))
                     {
                     	AMKA = rst.getString("patientAMKA");
+                    	Cookie loginCookie = new Cookie("amka", AMKA);
+                    	loginCookie.setMaxAge(3600);
+                    	response.addCookie(loginCookie);
                     	RequestDispatcher view = request.getRequestDispatcher("html/main_p.html");
                 		view.forward(request, response);
                     }
@@ -57,6 +60,9 @@ public class loginServlet extends HttpServlet {
                     if(rst.next() && PasswordStoring.verifyPassword(request.getParameter("pass"), rst.getString("password")))
                     {
                     	AMKA = rst.getString("doctorAMKA");
+                    	Cookie loginCookie = new Cookie("amka", AMKA);
+                    	loginCookie.setMaxAge(3600);
+                    	response.addCookie(loginCookie);
                     	RequestDispatcher view = request.getRequestDispatcher("html/main_d.html");
                 		view.forward(request, response);
                     }
@@ -64,6 +70,10 @@ public class loginServlet extends HttpServlet {
                     rst = stmt.executeQuery("SELECT * FROM public.admin WHERE userid='"+username+"';");
                     if(rst.next() && PasswordStoring.verifyPassword(request.getParameter("pass"), rst.getString("password")))
                     {
+                    	AMKA = rst.getString("adminAMKA");
+                    	Cookie loginCookie = new Cookie("amka", AMKA);
+                    	loginCookie.setMaxAge(3600);
+                    	response.addCookie(loginCookie);
                     	RequestDispatcher view = request.getRequestDispatcher("html/main_a.html");
                 		view.forward(request, response);
                     }
@@ -79,6 +89,20 @@ public class loginServlet extends HttpServlet {
         {
             e.printStackTrace();
         }
+    }
+    
+    static void validateCookie(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	loginServlet.AMKA = null;
+    	Cookie[] cookies = request.getCookies();
+    	if(cookies != null) {
+    		for(Cookie cookie : cookies) {
+    			if(cookie.getName().equals("amka")) loginServlet.AMKA = cookie.getValue();
+    		}
+    	}
+    	if(loginServlet.AMKA == null) {
+    		RequestDispatcher view = request.getRequestDispatcher("html/index.html");
+    		view.forward(request, response);
+    	}
     }
     
 	/**

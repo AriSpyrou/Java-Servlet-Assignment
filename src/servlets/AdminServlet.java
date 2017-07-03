@@ -134,28 +134,35 @@ public class AdminServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
 		if (request.getParameter("add_patient") != null) {
+			loginServlet.validateCookie(request, response);
 			RequestDispatcher view = request.getRequestDispatcher("html/form_add_user.html");
 			view.forward(request, response);
 		}
 		else if (request.getParameter("remove_patient") != null) {
+			loginServlet.validateCookie(request, response);
 			RequestDispatcher view = request.getRequestDispatcher("html/form_remove.html");
 			view.forward(request, response);
 		}
 		else if (request.getParameter("add_doctor") != null) {
+			loginServlet.validateCookie(request, response);
 			RequestDispatcher view = request.getRequestDispatcher("html/form_add_doctor.html");
 			view.forward(request, response);
 		}
 		else if (request.getParameter("remove_doctor") != null) {
+			loginServlet.validateCookie(request, response);
 			RequestDispatcher view = request.getRequestDispatcher("html/form_remove.html");
 			view.forward(request, response);
 		}
 		else if (request.getParameter("form_remove") != null) {
+			loginServlet.validateCookie(request, response);
 			remove_user(request, response , out);
 		}
 		else if (request.getParameter("form_add_user") != null) {
+			loginServlet.validateCookie(request, response);
 			add_patient(request, response, out);
 		}
 		else if (request.getParameter("form_add_doctor") != null) {
+			loginServlet.validateCookie(request, response);
 			add_doctor(request, response, out);
 		}
 	}

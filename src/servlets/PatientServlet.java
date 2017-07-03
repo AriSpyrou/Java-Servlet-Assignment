@@ -41,7 +41,7 @@ public class PatientServlet extends HttpServlet {
                 if(conn != null) 
                 {
                     Statement stmt = conn.createStatement();
-                    ResultSet rst = stmt.executeQuery("SELECT * FROM public.patient WHERE userid='"+loginServlet.username+"';");
+                    ResultSet rst = stmt.executeQuery("SELECT * FROM public.patient WHERE patientAMKA='"+loginServlet.AMKA+"';");
                     out.println(""
                     		+ "<table BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>"
                             +"<tr><th>Patient AMKA</th><th>Name</th><th>Surname</th><th>Gender</th></tr>"
@@ -188,30 +188,38 @@ public class PatientServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
 		if (request.getParameter("show_patientDetails") != null) {
+			loginServlet.validateCookie(request, response);
 			show_patientDetails(request, response , out);
 		}
 		else if (request.getParameter("show_appointment_history") != null) {
+			loginServlet.validateCookie(request, response);
 			show_appointment_history(request, response , out);
 		}
 		else if(request.getParameter("show_specialty_availability") != null) {
+			loginServlet.validateCookie(request, response);
 			RequestDispatcher view = request.getRequestDispatcher("html/form_show_specialty_availability.html");
 			view.forward(request, response);
 		}
 		else if(request.getParameter("form_show_specialty_availability") != null) {
+			loginServlet.validateCookie(request, response);
 			show_specialty_availability(request, response, out);
 		}
 		else if(request.getParameter("book_appointment") != null) {
+			loginServlet.validateCookie(request, response);
 			RequestDispatcher view = request.getRequestDispatcher("html/form_book_appointment.html");
 			view.forward(request, response);
 		}
 		else if(request.getParameter("form_book_appointment") != null) {
+			loginServlet.validateCookie(request, response);
 			book_appointment(request, response, out);
 		}
 		else if(request.getParameter("cancel_appointment") != null) {
+			loginServlet.validateCookie(request, response);
 			RequestDispatcher view = request.getRequestDispatcher("html/form_cancel_appointment.html");
 			view.forward(request, response);
 		}
 		else if(request.getParameter("form_cancel_appointment") != null) {
+			loginServlet.validateCookie(request, response);
 			cancel_appointment(request, response, out);
 		}
 	}
